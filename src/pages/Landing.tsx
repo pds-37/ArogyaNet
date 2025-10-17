@@ -1,79 +1,73 @@
 import { Link } from "react-router-dom";
-import { Building2, Shield, Heart, Users } from "lucide-react";
+import { Activity, ArrowRight } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Card } from "@/components/ui/card";
 
 const Landing = () => {
-  const roles = [
-    {
-      title: "Hospital",
-      icon: Building2,
-      description: "Predict patient surges and manage resources efficiently",
-      path: "/hospital",
-      color: "bg-primary/10 hover:bg-primary/20",
-    },
-    {
-      title: "Government",
-      icon: Shield,
-      description: "Monitor regions and coordinate emergency responses",
-      path: "/government",
-      color: "bg-accent/10 hover:bg-accent/20",
-    },
-    {
-      title: "NGO",
-      icon: Heart,
-      description: "Coordinate volunteers and track relief efforts",
-      path: "/ngo",
-      color: "bg-success/10 hover:bg-success/20",
-    },
-    {
-      title: "Public",
-      icon: Users,
-      description: "Stay informed with health alerts and advisories",
-      path: "/public",
-      color: "bg-warning/10 hover:bg-warning/20",
-    },
-  ];
-
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
-      <div className="container mx-auto px-4 py-16">
-        <div className="text-center mb-16 animate-in fade-in duration-700">
-          <h1 className="text-5xl md:text-7xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent mb-4">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5 flex items-center justify-center relative overflow-hidden">
+      {/* Animated background elements */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-20 left-20 w-72 h-72 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-20 right-20 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      <div className="container mx-auto px-4 relative z-10">
+        <div className="max-w-4xl mx-auto text-center space-y-8 animate-in fade-in duration-1000">
+          {/* Logo/Icon */}
+          <div className="flex justify-center mb-6 animate-in zoom-in duration-700">
+            <div className="relative">
+              <Activity className="w-20 h-20 text-primary animate-pulse" />
+              <div className="absolute inset-0 bg-primary/20 rounded-full blur-xl" />
+            </div>
+          </div>
+
+          {/* Brand Name */}
+          <h1 className="text-6xl md:text-8xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-primary via-accent to-primary animate-in slide-in-from-bottom-4 duration-700" style={{ animationDelay: '200ms' }}>
             AarogyaNet
           </h1>
-          <p className="text-xl md:text-2xl text-muted-foreground mb-2">
-            Health Surge Prediction & Coordination Platform
-          </p>
-          <p className="text-sm text-muted-foreground max-w-2xl mx-auto">
-            Predicting hospital surges using AQI, weather, festivals, and historical data to enable
-            proactive healthcare resource management
-          </p>
-        </div>
 
-        <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-          {roles.map((role, index) => (
-            <Card
-              key={role.title}
-              className={`p-6 ${role.color} border-2 transition-all duration-300 hover:scale-105 hover:shadow-xl animate-in fade-in slide-in-from-bottom-4`}
-              style={{ animationDelay: `${index * 100}ms` }}
+          {/* Quote */}
+          <div className="animate-in fade-in duration-700" style={{ animationDelay: '400ms' }}>
+            <blockquote className="text-2xl md:text-3xl font-light text-foreground/90 italic mb-4">
+              "Predicting tomorrow's health challenges,
+              <br />
+              <span className="text-primary font-medium">empowering today's decisions"</span>
+            </blockquote>
+            <p className="text-base md:text-lg text-muted-foreground max-w-2xl mx-auto">
+              AI-powered health surge prediction using real-time AQI, weather patterns, and festival data 
+              to enable proactive healthcare resource management
+            </p>
+          </div>
+
+          {/* CTA Button */}
+          <div className="animate-in zoom-in duration-500" style={{ animationDelay: '600ms' }}>
+            <Button 
+              asChild 
+              size="lg" 
+              className="text-lg px-8 py-6 hover:scale-105 transition-all duration-300 shadow-xl hover:shadow-2xl group"
             >
-              <Link to={role.path} className="block">
-                <div className="flex flex-col items-center text-center space-y-4">
-                  <role.icon className="w-12 h-12 text-primary" />
-                  <h3 className="text-xl font-bold text-foreground">{role.title}</h3>
-                  <p className="text-sm text-muted-foreground">{role.description}</p>
-                  <Button className="w-full">Access Dashboard</Button>
-                </div>
+              <Link to="/auth" className="flex items-center gap-2">
+                Access Your Dashboard
+                <ArrowRight className="w-5 h-5 group-hover:translate-x-1 transition-transform" />
               </Link>
-            </Card>
-          ))}
-        </div>
+            </Button>
+          </div>
 
-        <div className="text-center">
-          <Button asChild size="lg" variant="outline">
-            <Link to="/auth">Sign In / Register</Link>
-          </Button>
+          {/* Stats or features */}
+          <div className="grid grid-cols-3 gap-8 max-w-2xl mx-auto pt-12 animate-in fade-in duration-700" style={{ animationDelay: '800ms' }}>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-primary">4</p>
+              <p className="text-sm text-muted-foreground">Role Types</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-accent">24/7</p>
+              <p className="text-sm text-muted-foreground">Monitoring</p>
+            </div>
+            <div className="text-center">
+              <p className="text-3xl font-bold text-success">Real-time</p>
+              <p className="text-sm text-muted-foreground">Predictions</p>
+            </div>
+          </div>
         </div>
       </div>
     </div>

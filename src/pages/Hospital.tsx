@@ -4,11 +4,13 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Building2, TrendingUp, Users, Bed, Activity } from "lucide-react";
+import { Building2, TrendingUp, Users, Bed, Activity, Send, Download } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 const Hospital = () => {
+  const { toast } = useToast();
   const [aqi, setAqi] = useState("180");
   const [temperature, setTemperature] = useState("32");
   const [humidity, setHumidity] = useState("60");
@@ -52,11 +54,36 @@ const Hospital = () => {
       extraNurses: surgePercent >= 40 ? 10 : surgePercent >= 20 ? 5 : 0,
       extraBeds: surgePercent >= 40 ? 30 : surgePercent >= 20 ? 10 : 0,
     });
+
+    toast({
+      title: "Prediction Complete",
+      description: `Surge level: ${level}. Predicted ${predicted} patients.`,
+    });
+  };
+
+  const sendToGovernment = () => {
+    toast({
+      title: "Data Sent Successfully",
+      description: "Prediction report has been sent to government authorities.",
+    });
+  };
+
+  const downloadReport = () => {
+    toast({
+      title: "Report Downloaded",
+      description: "PDF report has been downloaded successfully.",
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-primary/5 to-accent/5 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-0 left-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-0 right-1/4 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1s' }} />
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Building2 className="w-10 h-10 text-primary" />
@@ -72,7 +99,7 @@ const Hospital = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 mb-6">
-          <Card className="p-6 space-y-4">
+          <Card className="p-6 space-y-4 hover:shadow-xl transition-all duration-300 border-primary/20">
             <h2 className="text-xl font-bold flex items-center gap-2">
               <TrendingUp className="w-5 h-5 text-primary" />
               Prediction Inputs
@@ -141,12 +168,13 @@ const Hospital = () => {
             </div>
 
             <Button onClick={runPrediction} className="w-full" size="lg">
+              <TrendingUp className="w-4 h-4 mr-2" />
               Run Prediction
             </Button>
           </Card>
 
           {prediction && (
-            <Card className="p-6 space-y-4 animate-in fade-in slide-in-from-right duration-500">
+            <Card className="p-6 space-y-4 animate-in fade-in slide-in-from-right duration-500 hover:shadow-xl transition-all border-primary/20">
               <h2 className="text-xl font-bold flex items-center gap-2">
                 <Users className="w-5 h-5 text-primary" />
                 Prediction Results
@@ -192,14 +220,14 @@ const Hospital = () => {
         </div>
 
         {prediction && (
-          <Card className="p-6 animate-in fade-in slide-in-from-bottom duration-500">
+          <Card className="p-6 animate-in fade-in slide-in-from-bottom duration-500 hover:shadow-xl transition-all border-primary/20">
             <h2 className="text-xl font-bold flex items-center gap-2 mb-4">
               <Bed className="w-5 h-5 text-primary" />
               Resource Planner
             </h2>
 
             <div className="grid md:grid-cols-3 gap-4">
-              <Card className="p-4 bg-primary/5">
+              <Card className="p-4 bg-primary/5 hover:bg-primary/10 transition-all duration-300 hover:scale-105">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Extra Doctors</p>
@@ -209,7 +237,7 @@ const Hospital = () => {
                 </div>
               </Card>
 
-              <Card className="p-4 bg-accent/5">
+              <Card className="p-4 bg-accent/5 hover:bg-accent/10 transition-all duration-300 hover:scale-105">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Extra Nurses</p>
@@ -219,7 +247,7 @@ const Hospital = () => {
                 </div>
               </Card>
 
-              <Card className="p-4 bg-success/5">
+              <Card className="p-4 bg-success/5 hover:bg-success/10 transition-all duration-300 hover:scale-105">
                 <div className="flex items-center justify-between">
                   <div>
                     <p className="text-sm text-muted-foreground">Extra Beds</p>
@@ -231,10 +259,14 @@ const Hospital = () => {
             </div>
 
             <div className="mt-6 flex gap-4">
-              <Button variant="outline" className="flex-1">
+              <Button variant="outline" className="flex-1" onClick={downloadReport}>
+                <Download className="w-4 h-4 mr-2" />
                 Download PDF Report
               </Button>
-              <Button className="flex-1">Send to Government</Button>
+              <Button className="flex-1" onClick={sendToGovernment}>
+                <Send className="w-4 h-4 mr-2" />
+                Send to Government
+              </Button>
             </div>
           </Card>
         )}

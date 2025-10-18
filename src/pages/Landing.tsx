@@ -139,9 +139,9 @@ const Landing = () => {
         <div className="absolute top-1/4 right-1/4 w-64 h-64 bg-accent/10 rounded-full blur-3xl animate-pulse" />
       </div>
 
-      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-4 py-12">
+      <div className="relative z-10 flex flex-col items-center justify-center min-h-screen px-6 py-16">
         {/* Logo/Brand with pulsing effect */}
-        <div className="mb-8 animate-fade-in">
+        <div className="mb-12 animate-fade-in">
           <div className="flex items-center gap-3 mb-4 group">
             <div className="relative">
               <Activity className="w-16 h-16 text-primary animate-pulse" />
@@ -161,17 +161,17 @@ const Landing = () => {
         </div>
 
         {/* Quote with typing effect styling */}
-        <div className="max-w-3xl text-center mb-12 animate-fade-in delay-200">
-          <p className="text-2xl md:text-3xl text-foreground font-semibold mb-4">
+        <div className="max-w-4xl text-center mb-16 animate-fade-in delay-200 px-4">
+          <p className="text-2xl md:text-4xl text-foreground font-bold mb-6">
             "Predicting Health Surges Before They Happen"
           </p>
-          <p className="text-base md:text-lg text-muted-foreground leading-relaxed">
+          <p className="text-lg md:text-xl text-muted-foreground leading-relaxed">
             Multi-agent AI platform predicting hospital patient surges using real-time AQI, weather, festivals & historical data
           </p>
         </div>
 
         {/* Feature highlights */}
-        <div className="flex flex-wrap justify-center gap-4 mb-12 animate-fade-in delay-300">
+        <div className="flex flex-wrap justify-center gap-4 mb-16 animate-fade-in delay-300 max-w-4xl">
           <div className="flex items-center gap-2 bg-card/50 backdrop-blur-sm border border-border rounded-full px-4 py-2 hover:scale-105 transition-transform cursor-pointer">
             <Zap className="w-4 h-4 text-primary" />
             <span className="text-sm">Real-time Predictions</span>
@@ -207,7 +207,7 @@ const Landing = () => {
         </div>
 
         {/* Animated Stats Grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 max-w-5xl w-full animate-fade-in delay-500">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 md:gap-8 max-w-6xl w-full px-4 animate-fade-in delay-500">
           <div className="bg-card/60 backdrop-blur-md border border-border rounded-xl p-6 text-center hover:scale-105 hover:border-primary/50 transition-all group cursor-pointer">
             <Users className="w-10 h-10 text-primary mx-auto mb-3 group-hover:scale-110 transition-transform" />
             <div className="text-3xl font-bold text-foreground mb-1">{stats.hospitals}+</div>

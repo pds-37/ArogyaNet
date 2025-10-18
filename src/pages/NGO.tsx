@@ -1,10 +1,13 @@
 import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Heart, Users, Package, MapPin } from "lucide-react";
+import { Heart, Users, Package, MapPin, UserPlus, Send, Rocket, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
+import { useToast } from "@/hooks/use-toast";
 
 const NGO = () => {
+  const { toast } = useToast();
+
   const volunteers = [
     { name: "Raj Sharma", area: "Mumbai Central", status: "Active", tasks: 8 },
     { name: "Priya Patel", area: "Delhi NCR", status: "Active", tasks: 12 },
@@ -19,9 +22,43 @@ const NGO = () => {
     { item: "PPE Kits", stock: 2000, needed: 2500, priority: "MEDIUM" },
   ];
 
+  const assignTasks = () => {
+    toast({
+      title: "Tasks Assigned",
+      description: "New tasks have been assigned to available volunteers.",
+    });
+  };
+
+  const requestSupplies = () => {
+    toast({
+      title: "Supply Request Sent",
+      description: "Your supply request has been submitted to authorities.",
+    });
+  };
+
+  const mobilizeTeam = () => {
+    toast({
+      title: "Team Mobilized",
+      description: "Volunteers are being deployed to Mumbai Central area.",
+    });
+  };
+
+  const viewDetails = () => {
+    toast({
+      title: "Opening Details",
+      description: "Loading advisory details...",
+    });
+  };
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-success/5 to-primary/5">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-success/5 to-primary/5 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/3 left-1/4 w-96 h-96 bg-success/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/3 right-1/4 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '2s' }} />
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Heart className="w-10 h-10 text-success" />
@@ -37,7 +74,7 @@ const NGO = () => {
         </div>
 
         <div className="grid lg:grid-cols-2 gap-6 mb-6">
-          <Card className="p-6">
+          <Card className="p-6 hover:shadow-xl transition-all duration-300 border-success/20">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <Users className="w-5 h-5 text-success" />
               Volunteer Status
@@ -45,7 +82,7 @@ const NGO = () => {
 
             <div className="space-y-3">
               {volunteers.map((volunteer, idx) => (
-                <Card key={idx} className="p-4 hover:shadow-md transition-all">
+                <Card key={idx} className="p-4 hover:shadow-md transition-all hover:scale-[1.02] duration-300">
                   <div className="flex items-center justify-between mb-2">
                     <h3 className="font-semibold">{volunteer.name}</h3>
                     <Badge variant={volunteer.status === "Active" ? "default" : "secondary"}>
@@ -63,10 +100,13 @@ const NGO = () => {
               ))}
             </div>
 
-            <Button className="w-full mt-4">Assign New Tasks</Button>
+            <Button className="w-full mt-4" onClick={assignTasks}>
+              <UserPlus className="w-4 h-4 mr-2" />
+              Assign New Tasks
+            </Button>
           </Card>
 
-          <Card className="p-6">
+          <Card className="p-6 hover:shadow-xl transition-all duration-300 border-success/20">
             <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
               <Package className="w-5 h-5 text-success" />
               Supply Inventory
@@ -95,16 +135,17 @@ const NGO = () => {
               ))}
             </div>
 
-            <Button className="w-full mt-4" variant="outline">
+            <Button className="w-full mt-4" variant="outline" onClick={requestSupplies}>
+              <Send className="w-4 h-4 mr-2" />
               Request More Supplies
             </Button>
           </Card>
         </div>
 
-        <Card className="p-6">
+        <Card className="p-6 hover:shadow-xl transition-all duration-300 border-success/20">
           <h2 className="text-xl font-bold mb-4">Active Advisories</h2>
           <div className="grid md:grid-cols-2 gap-4">
-            <Card className="p-4 bg-destructive/5 border-destructive/20">
+            <Card className="p-4 bg-destructive/5 border-destructive/20 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
               <Badge variant="destructive" className="mb-2">
                 HIGH ALERT
               </Badge>
@@ -113,18 +154,20 @@ const NGO = () => {
                 Deploy volunteers for mask distribution and public awareness campaigns. Focus on vulnerable
                 populations.
               </p>
-              <Button size="sm" className="w-full">
+              <Button size="sm" className="w-full" onClick={mobilizeTeam}>
+                <Rocket className="w-4 h-4 mr-2" />
                 Mobilize Team
               </Button>
             </Card>
 
-            <Card className="p-4 bg-warning/5 border-warning/20">
+            <Card className="p-4 bg-warning/5 border-warning/20 hover:shadow-lg transition-all duration-300 hover:scale-[1.02]">
               <Badge className="mb-2">MEDIUM</Badge>
               <h3 className="font-semibold mb-2">Festival Crowd Management - Delhi</h3>
               <p className="text-sm text-muted-foreground mb-3">
                 Support hospital staff with crowd control and resource distribution during festival season.
               </p>
-              <Button size="sm" variant="outline" className="w-full">
+              <Button size="sm" variant="outline" className="w-full" onClick={viewDetails}>
+                <Eye className="w-4 h-4 mr-2" />
                 View Details
               </Button>
             </Card>

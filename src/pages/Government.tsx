@@ -3,12 +3,14 @@ import { Card } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
-import { Shield, AlertTriangle, MapPin, Send } from "lucide-react";
+import { Shield, AlertTriangle, MapPin, Send, Package, Eye } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 const Government = () => {
+  const { toast } = useToast();
   const [advisoryText, setAdvisoryText] = useState("");
   const [selectedArea, setSelectedArea] = useState("");
 
@@ -42,11 +44,65 @@ HOSPITAL ADVISORY:
 For emergencies, call: 108`;
 
     setAdvisoryText(template);
+    
+    toast({
+      title: "Template Generated",
+      description: "Advisory template has been created. You can now edit and publish.",
+    });
+  };
+
+  const allocateResources = () => {
+    toast({
+      title: "Resources Allocated",
+      description: "Emergency resources dispatched to high-surge hospitals.",
+    });
+  };
+
+  const publishAdvisory = () => {
+    if (!advisoryText.trim()) {
+      toast({
+        title: "Error",
+        description: "Please enter an advisory message before publishing.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Advisory Published",
+      description: "Health advisory has been published to all subscribers.",
+    });
+
+    // Reset form
+    setAdvisoryText("");
+    setSelectedArea("");
+  };
+
+  const previewAdvisory = () => {
+    if (!advisoryText.trim()) {
+      toast({
+        title: "No Content",
+        description: "Please enter an advisory message to preview.",
+        variant: "destructive",
+      });
+      return;
+    }
+
+    toast({
+      title: "Preview Mode",
+      description: "Opening preview window...",
+    });
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5">
-      <div className="container mx-auto px-4 py-8">
+    <div className="min-h-screen bg-gradient-to-br from-background via-accent/5 to-primary/5 relative overflow-hidden">
+      {/* Animated background */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 right-1/3 w-96 h-96 bg-accent/10 rounded-full blur-3xl animate-pulse" />
+        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-primary/10 rounded-full blur-3xl animate-pulse" style={{ animationDelay: '1.5s' }} />
+      </div>
+
+      <div className="container mx-auto px-4 py-8 relative z-10">
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
             <Shield className="w-10 h-10 text-accent" />
@@ -64,7 +120,7 @@ For emergencies, call: 108`;
           </TabsList>
 
           <TabsContent value="hospitals" className="space-y-4">
-            <Card className="p-6">
+            <Card className="p-6 hover:shadow-xl transition-all duration-300 border-accent/20">
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-accent" />
                 Regional Hospital Status
@@ -74,7 +130,7 @@ For emergencies, call: 108`;
                 {hospitals.map((hospital) => (
                   <Card
                     key={hospital.id}
-                    className="p-4 flex items-center justify-between hover:shadow-lg transition-all"
+                    className="p-4 flex items-center justify-between hover:shadow-lg transition-all hover:scale-[1.02] duration-300"
                   >
                     <div className="flex-1">
                       <h3 className="font-semibold">{hospital.name}</h3>
@@ -99,15 +155,18 @@ For emergencies, call: 108`;
               </div>
             </Card>
 
-            <Card className="p-6 bg-gradient-to-r from-primary/10 to-accent/10">
+            <Card className="p-6 bg-gradient-to-r from-destructive/10 to-warning/10 border-destructive/20 hover:shadow-xl transition-all duration-300">
               <div className="flex items-start gap-4">
-                <AlertTriangle className="w-6 h-6 text-accent flex-shrink-0 mt-1" />
-                <div>
-                  <h3 className="font-semibold mb-2">Critical Alert</h3>
-                  <p className="text-sm text-muted-foreground mb-3">
+                <AlertTriangle className="w-6 h-6 text-destructive flex-shrink-0 mt-1 animate-pulse" />
+                <div className="flex-1">
+                  <h3 className="font-semibold mb-2 text-lg">Critical Alert</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
                     2 hospitals showing HIGH surge levels. Immediate resource allocation recommended.
                   </p>
-                  <Button size="sm">Allocate Resources</Button>
+                  <Button size="sm" onClick={allocateResources} className="w-full md:w-auto">
+                    <Package className="w-4 h-4 mr-2" />
+                    Allocate Resources
+                  </Button>
                 </div>
               </div>
             </Card>
@@ -115,7 +174,7 @@ For emergencies, call: 108`;
 
           <TabsContent value="advisory" className="space-y-6">
             <div className="grid lg:grid-cols-2 gap-6">
-              <Card className="p-6 space-y-4">
+              <Card className="p-6 space-y-4 hover:shadow-xl transition-all duration-300 border-accent/20">
                 <h2 className="text-xl font-bold flex items-center gap-2">
                   <Send className="w-5 h-5 text-accent" />
                   Create Advisory
@@ -153,18 +212,22 @@ For emergencies, call: 108`;
                   </div>
 
                   <div className="flex gap-3">
-                    <Button className="flex-1">Publish Advisory</Button>
-                    <Button variant="outline" className="flex-1">
+                    <Button className="flex-1" onClick={publishAdvisory}>
+                      <Send className="w-4 h-4 mr-2" />
+                      Publish Advisory
+                    </Button>
+                    <Button variant="outline" className="flex-1" onClick={previewAdvisory}>
+                      <Eye className="w-4 h-4 mr-2" />
                       Preview
                     </Button>
                   </div>
                 </div>
               </Card>
 
-              <Card className="p-6">
+              <Card className="p-6 hover:shadow-xl transition-all duration-300 border-accent/20">
                 <h2 className="text-xl font-bold mb-4">Recent Advisories</h2>
                 <div className="space-y-3">
-                  <Card className="p-4 bg-muted/50">
+                  <Card className="p-4 bg-muted/50 hover:bg-muted transition-all duration-300 cursor-pointer hover:scale-[1.02]">
                     <div className="flex items-start justify-between mb-2">
                       <Badge variant="destructive">HIGH ALERT</Badge>
                       <span className="text-xs text-muted-foreground">2 hours ago</span>
@@ -173,7 +236,7 @@ For emergencies, call: 108`;
                     <p className="text-xs text-muted-foreground">Published to 50,000 subscribers</p>
                   </Card>
 
-                  <Card className="p-4 bg-muted/50">
+                  <Card className="p-4 bg-muted/50 hover:bg-muted transition-all duration-300 cursor-pointer hover:scale-[1.02]">
                     <div className="flex items-start justify-between mb-2">
                       <Badge>MEDIUM</Badge>
                       <span className="text-xs text-muted-foreground">5 hours ago</span>
@@ -182,7 +245,7 @@ For emergencies, call: 108`;
                     <p className="text-xs text-muted-foreground">Published to 35,000 subscribers</p>
                   </Card>
 
-                  <Card className="p-4 bg-muted/50">
+                  <Card className="p-4 bg-muted/50 hover:bg-muted transition-all duration-300 cursor-pointer hover:scale-[1.02]">
                     <div className="flex items-start justify-between mb-2">
                       <Badge variant="secondary">INFO</Badge>
                       <span className="text-xs text-muted-foreground">1 day ago</span>

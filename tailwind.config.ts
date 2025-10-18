@@ -47,6 +47,10 @@ export default {
           DEFAULT: "hsl(var(--warning))",
           foreground: "hsl(var(--warning-foreground))",
         },
+        medical: {
+          DEFAULT: "hsl(var(--medical))",
+          foreground: "hsl(var(--medical-foreground))",
+        },
         popover: {
           DEFAULT: "hsl(var(--popover))",
           foreground: "hsl(var(--popover-foreground))",

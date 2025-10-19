@@ -1,11 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Card } from "@/components/ui/card";
 import { Building2, Shield, Heart, Users, ArrowLeft, CheckCircle2 } from "lucide-react";
-import { useToast } from "@/hooks/use-toast";
+import { useAuth } from "@/contexts/AuthContext";
 
 type Role = "hospital" | "government" | "ngo" | "public" | null;
 
@@ -15,8 +15,16 @@ const Auth = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
-  const { toast } = useToast();
+  const { signIn, signUp, user, role } = useAuth();
+
+  // Redirect if already logged in
+  useEffect(() => {
+    if (user && role) {
+      navigate(`/${role}`);
+    }
+  }, [user, role, navigate]);
 
   const roles = [
     {
@@ -58,29 +66,23 @@ const Auth = () => {
     setTimeout(() => setStep("credentials"), 300);
   };
 
-  const handleAuth = () => {
-    if (!email || !password) {
-      toast({
-        title: "Missing Information",
-        description: "Please fill in all fields",
-        variant: "destructive",
-      });
+  const handleAuth = async () => {
+    if (!email || !password || !selectedRole) {
       return;
     }
 
-    toast({
-      title: isLogin ? "Login Successful" : "Registration Successful",
-      description: `Welcome to AarogyaNet ${selectedRole} portal`,
-    });
-
-    const roleRoutes: Record<string, string> = {
-      hospital: "/hospital",
-      government: "/government",
-      ngo: "/ngo",
-      public: "/public",
-    };
-
-    navigate(roleRoutes[selectedRole || ""] || "/");
+    setLoading(true);
+    try {
+      if (isLogin) {
+        await signIn(email, password);
+      } else {
+        await signUp(email, password, selectedRole);
+      }
+    } catch (error) {
+      // Error handling is done in the auth context
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -180,8 +182,13 @@ const Auth = () => {
                 />
               </div>
 
-              <Button onClick={handleAuth} className="w-full" size="lg">
-                {isLogin ? "Sign In" : "Create Account"}
+              <Button 
+                onClick={handleAuth} 
+                className="w-full" 
+                size="lg"
+                disabled={loading}
+              >
+                {loading ? "Processing..." : isLogin ? "Sign In" : "Create Account"}
               </Button>
 
               <div className="text-center">
